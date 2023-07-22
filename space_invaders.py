@@ -38,24 +38,49 @@ bullet_img = pygame.image.load("image/bullet.png")
 bullets = []
 isShot = False
 
+# звёзды
+star_img = pygame.image.load('image/starinv.png')
+star_cd = 1000
+star_last_time = 0
+stars = []
+star_rect = star_img.get_rect()
+
+# текст
+font = pygame.font.SysFont("arial", 36)
+score_text = font.render('Счёт: ', True, 'white')
+
 speed = 5
 moving = ''
 running = True
 while running:
+
     screen.fill('black')
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
             running = False
+    # отрисовка счёта
+    screen.blit(score_text, (10, 10))
+
 
     # создание пришельцев
     current_time = pygame.time.get_ticks()
-    if current_time-invader_last_time>invader_cd:
-        invaders.append(invader_img.get_rect(topleft=(random.randint(0, WIDTH-70),-50)))
+    if current_time - invader_last_time > invader_cd:
+        invaders.append(invader_img.get_rect(topleft=(random.randint(0, WIDTH - 70), -50)))
         invader_last_time = current_time
 
     for invader in invaders:
         screen.blit(invader_img, invader)
-        invader.top+= 5
+        invader.top += 5
+
+    # создание звёзд
+    if current_time - star_last_time > star_cd:
+        stars.append(star_img.get_rect(topleft=(random.randint(0, WIDTH - 70), -50)))
+        star_last_time = current_time
+        star_cd = random.randint(500, 1000)
+
+    for star in stars:
+        screen.blit(star_img, star)
+        star.top += 10
 
     keys = pygame.key.get_pressed()
     # передвижение
